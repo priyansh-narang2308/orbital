@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -17,15 +18,16 @@ import { Loader } from "../ui/loader";
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const { data: session, isPending } = authClient.useSession();
+  const router = useRouter();
 
   useEffect(() => {
     if (session && !isPending) {
       const params = new URLSearchParams(window.location.search);
       const callbackURL = params.get("callbackURL") || "/";
       console.log("Session detected, forcing redirect to:", callbackURL);
-      window.location.href = callbackURL;
+      router.push(callbackURL);
     }
-  }, [session, isPending]);
+  }, [session, isPending, router]);
 
   if (isPending || session) {
     return (
